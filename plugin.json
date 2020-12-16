@@ -1,0 +1,7 @@
+{
+  "name": "MindustryPartyPluginV2",
+  "author": "NoahvdAa",
+  "main": "party.mindustry.pluginv2.MPPV2",
+  "description": "The new plugin that powers Mindustry.Party. ",
+  "version": 1.0.0
+}
