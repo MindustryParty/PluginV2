@@ -18,6 +18,7 @@ CREATE TABLE `players` (
   `uuid` varchar(100) NOT NULL,
   `playtime_vanilla` int(50) NOT NULL DEFAULT '0',
   `playtime_modded` int(50) NOT NULL DEFAULT '0',
+  `playtime_pvp` int(50) NOT NULL DEFAULT '0',
   `playtime_total` int(50) NOT NULL DEFAULT '0',
   `name` varchar(100) NOT NULL DEFAULT 'UNKNOWN PLAYER',
   `rank` varchar(50) NOT NULL DEFAULT 'default',

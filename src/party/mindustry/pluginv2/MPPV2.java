@@ -197,6 +197,11 @@ public class MPPV2 extends Plugin {
 										"UPDATE players SET `playtime_modded` = `playtime_modded` + 1, `playtime_total` = `playtime_total` + 1 WHERE uuid=?;");
 								increasePlaytimeStatement.setString(1, p.uuid());
 								increasePlaytimeStatement.execute();
+							}else if (config.getProperty("server.type").equals("pvp")) {
+								PreparedStatement increasePlaytimeStatement = mysqlConnection.prepareStatement(
+										"UPDATE players SET `playtime_pvp` = `playtime_pvp` + 1, `playtime_total` = `playtime_total` + 1 WHERE uuid=?;");
+								increasePlaytimeStatement.setString(1, p.uuid());
+								increasePlaytimeStatement.execute();
 							} else {
 								PreparedStatement increasePlaytimeStatement = mysqlConnection.prepareStatement(
 										"UPDATE players SET `playtime_vanilla` = `playtime_vanilla` + 1, `playtime_total` = `playtime_total` + 1 WHERE uuid=?;");
@@ -239,18 +244,22 @@ public class MPPV2 extends Plugin {
 						if (config.getProperty("server.type").equals("modded")) {
 							server = "Modded";
 							playerTopStatement = mysqlConnection
-									.prepareStatement("SELECT * FROM players ORDER BY playtime_modded DESC LIMIT 10;");
+									.prepareStatement("SELECT * FROM `players` ORDER BY `playtime_modded` DESC LIMIT 10;");
+						}if (config.getProperty("server.type").equals("pvp")) {
+							server = "PVP";
+							playerTopStatement = mysqlConnection
+									.prepareStatement("SELECT * FROM `players` ORDER BY `playtime_pvp` DESC LIMIT 10;");
 						} else {
 							server = "Vanilla";
 							playerTopStatement = mysqlConnection
-									.prepareStatement("SELECT * FROM players ORDER BY playtime_vanilla DESC LIMIT 10;");
+									.prepareStatement("SELECT * FROM `players` ORDER BY `playtime_vanilla` DESC LIMIT 10;");
 						}
 						ResultSet playerTop = playerTopStatement.executeQuery();
 						String text = "Top 10 - Playtime (" + server + " Server)";
 						int pos = 1;
 						while (playerTop.next()) {
-							int pt = (server == "Vanilla" ? playerTop.getInt("playtime_vanilla")
-									: playerTop.getInt("playtime_modded"));
+							int pt = (server.equals("Vanilla") ? playerTop.getInt("playtime_vanilla")
+									: server.equals("PVP") ? playerTop.getInt("playtime_pvp") : playerTop.getInt("playtime_modded"));
 							text += "\n[accent]#" + pos + " -[white] " + playerTop.getString("name") + " [accent]- "
 									+ pt + " minute" + (pt == 1 ? "" : "s");
 							pos++;
@@ -290,11 +299,13 @@ public class MPPV2 extends Plugin {
 				playerInfo.next();
 				int pt_v = playerInfo.getInt("playtime_vanilla");
 				int pt_m = playerInfo.getInt("playtime_modded");
+				int pt_p = playerInfo.getInt("playtime_pvp");
 				int pt_t = playerInfo.getInt("playtime_total");
 				Call.infoMessage(player.con,
 						"Your statistics:" + "\n" + "Playtime (Vanilla) : [accent]" + pt_v + " minute"
 								+ (pt_v == 1 ? "" : "s") + "[]\n" + "Playtime (Modded) : [accent]" + pt_m + " minute"
-								+ (pt_m == 1 ? "" : "s") + "[]\n" + "Playtime (Total) : [accent]" + pt_t + " minute"
+								+ (pt_m == 1 ? "" : "s") + "[]\n" + "Playtime (PVP) : [accent]" + pt_p + " minute"
+								+ (pt_p == 1 ? "" : "s") + "[]\n" + "Playtime (Total) : [accent]" + pt_t + " minute"
 								+ (pt_t == 1 ? "" : "s") + "[]");
 				mysqlConnection.close();
 			} catch (SQLException e) {
