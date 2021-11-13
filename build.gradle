@@ -19,8 +19,8 @@ ext{
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
 }
 
 jar{
